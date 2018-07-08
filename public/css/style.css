@@ -1,0 +1,180 @@
+body{
+    font-family: Calibri;
+}
+
+#joueur{
+    display: none;
+    border: 1px solid green;
+    margin: auto;
+    width: 300px;
+    padding: 10px;
+}
+
+#monForm{
+    display: grid;
+}
+
+#divConnexion{
+    margin: auto;
+    width: 275px;
+}
+
+#divConnexion input[type="text"]{
+    padding: 10px;
+    border: 1px solid black;
+}
+
+#divConnexion input[type="submit"]{
+    margin-top: 10px;
+    margin-bottom: 15px;
+    background-color: red;
+    border: none;
+    padding: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#divConnexion input[type="submit"]:hover{
+    background-color: rgb(196, 3, 3);
+
+}
+
+#jeu{
+    display: none;
+    width: 700px;
+    border: 1px solid black;
+    margin: auto;
+    padding: 10px;
+    background-color: #156c39;
+    color: white;
+    box-shadow: 1px 1px 2px 0px #505050;
+}
+
+#banque{
+    width: 580px;
+    height: 120px;
+}
+
+#joueur1{
+    width: 580px;
+    height: 120px;
+}
+
+#depart{
+    display: none;
+    position: absolute;
+    font-size: 30px;
+    font-family: fantasy;
+    margin-left: 300px;
+    width: 100px;
+    height: 100px;
+}
+
+#carteJouer{
+    width: 85px;
+    height: 100px;
+    float: left;
+    border: 1px solid black;
+    margin: 5px;
+    padding: 5px;
+    color: black;
+    background-color: white;
+    box-shadow: 1px 1px 7px black;
+}
+
+#scoreCarteBanque, #scoreCarte{
+    margin: 5px;
+    padding: 5px;
+    font-weight: bold;
+    border: 1px solid black;
+    box-shadow: 1px 1px 2px 0px black;
+}
+
+/* COMMANDES */
+
+#commandes{
+    position: absolute;
+    margin-top: 420px;
+    display: none;
+}
+
+#demarrer{
+    border: none;
+    padding: 10px;
+    background-color: #0dbf13d1;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+
+#donneCarte{
+    border: none;
+    padding: 10px;
+    background-color: #0a9e0ffa;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;    
+}
+
+#arreter{
+    border: none;
+    padding: 10px;
+    background-color: #ff0f0ffa;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;    
+}
+
+
+#mise{
+    width: 150px;
+    height: 50px;
+    position: absolute;
+    margin-left: 500px;
+    margin-top: 275px;
+}
+
+#pari{
+    height: 20px;
+}
+
+#jeton1, #jeton5, #jeton20, #jeton50, #jeton100, #jeton500 {
+    width: 22px;
+    height: 22px;
+    margin: 2px;
+    float: left;
+    border-radius: 12px;
+    border: 1px inset white;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0px 0px 14px yellow;
+
+}
+
+#jeton1{
+    background-color: #4cb3d29c; 
+}
+
+#jeton5{
+    background-color: #115dab;
+}
+
+#jeton20{
+    background-color: #ff0808;
+}
+
+#jeton50{
+    background-color: #053d77;
+}
+
+#jeton100{
+    background-color: #20dc14;
+}
+
+#jeton500{
+    background-color: #000000;
+}
+
