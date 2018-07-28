@@ -149,6 +149,56 @@
                 }
             }
 
+            // renvoie la couleur de la carte
+            var couleurCarte = function(couleur, valeur){
+                /*
+                    &#x2663;
+                    &#x2665;
+                    &#x2666;
+                    &#x2660;
+                */
+               this.couleur = couleur;
+               this.valeur = valeur;
+               this.couleurUnique = "";
+                // console.log(parseInt(this.valeur))
+                // if(parseInt(this.valeur) === NaN){
+                //     this.valeur.substring(0,2)
+                //     console.log(this.valeur)
+                // }
+                switch(this.valeur){
+                    case 'dame':
+                        this.valeur = 'D'
+                    break;
+                    
+                    case 'valet':
+                        this.valeur = 'V'
+                    break;                        
+                    case 'roi':
+                        this.valeur = 'R'
+                    break;                        
+                    case 'as':
+                        this.valeur = 'A'
+                    break;                        
+                }
+                
+               if(couleur === 'trefle'){
+                    this.couleurUnique = '&#x2663;'
+                    this.couleur = '&#x2663;'.repeat(valeur)
+               }
+               else if(couleur === 'carreau'){
+                    this.couleurUnique = '&#x2666;'                   
+                    this.couleur = '&#x2666;'.repeat(valeur)                     
+               }
+               else if(couleur === 'pique'){
+                    this.couleurUnique = '&#x2660;'                   
+                    this.couleur = '&#x2660;'.repeat(valeur)                   
+               }
+               else{
+                    this.couleurUnique = '&#x2665;'                   
+                    this.couleur = '&#x2665;'.repeat(valeur)                   
+               }
+            }
+
             // tri le paquet de carte 
             for (var j=0; valeurs[j]; j++) {
                 for (var i=0; couleurs[i]; i++) {
@@ -226,12 +276,15 @@
                 // vide la div de la banque et du joueur des cartes
                 divJoueur.innerHTML = "";
                 divBanque.innerHTML = "";
-
+                // renvoie la couleur des carte
+                couleur1 = new couleurCarte(couleur1, valeur1)
+                couleur2 = new couleurCarte(couleur2, valeur2)
+                couleur3 = new couleurCarte(couleur3, valeur3)
                 // affiche les cartes du joueur
-                $(divJoueur).append('<div id="carteJouer">' + valeur1 + '<br> ' + couleur1 + '</div>');
-                $(divJoueur).append('<div id="carteJouer">' + valeur2 + '<br> ' + couleur2 + '</div>');
+                $(divJoueur).append('<div id="carteJouer"><div id="valCarteJouer">' + couleur1.valeur + couleur1.couleurUnique + '</div><div id="couleurCarteJouer"> ' + couleur1.couleur + '</div>' + '<div id="valCarteJouerRotate">' + couleur1.valeur + couleur1.couleurUnique + '</div></div>');
+                $(divJoueur).append('<div id="carteJouer"><div id="valCarteJouer">' + couleur2.valeur + couleur2.couleurUnique + '</div><div id="couleurCarteJouer"> ' + couleur2.couleur + '</div>' + '<div id="valCarteJouerRotate">' + couleur2.valeur + couleur2.couleurUnique + '</div></div>');
                 // affiche la carte de la banque
-                $(divBanque).append('<div id="carteJouer">' + valeur3 + '<br> ' + couleur3 + '</div>');
+                $(divBanque).append('<div id="carteJouer"><div id="valCarteJouer">' + couleur3.valeur + couleur3.couleurUnique + '</div><div id="couleurCarteJouer"> ' + couleur3.couleur + '</div>' + '<div id="valCarteJouerRotate">' + couleur3.valeur + couleur3.couleurUnique + '</div></div>');
 
                 // si la valeur est egale a une figure alors on change la valeur 
                 valeur1 = figure(valeur1);
@@ -289,8 +342,10 @@
                 // recupere la valeur et la couleur de la carte dans le tableau
                 valeur = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
                 couleur = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
+                // renvoie la couleur de la carte
+                couleur = new couleurCarte(couleur, valeur)
                 // affiche la carte piocher
-                $(divJoueur).append('<div id="carteJouer">' + valeur + '<br> ' + couleur + '</div>');
+                $(divJoueur).append('<div id="carteJouer"><div id="valCarteJouer">' + couleur.valeur + couleur.couleurUnique + '</div><div id="couleurCarteJouer"> ' + couleur.couleur + '</div>' + '<div id="valCarteJouerRotate">' + couleur.valeur + couleur.couleurUnique + '</div></div>');                
                 // si la valeur est egale a une figure alors on change la valeur
                 valeur = figure(valeur);
                 // recupere le score dans la div joueur
@@ -335,9 +390,10 @@
         
                     valeur = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
                     couleur = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
-        
+                    // renvoie la couleur de la carte                    
+                    couleur = new couleurCarte(couleur, valeur)
                     // affiche la carte piocher
-                    $(divBanque).append('<div id="carteJouer">' + valeur + '<br> ' + couleur + '</div>');
+                    $(divBanque).append('<div id="carteJouer"><div id="valCarteJouer">' + couleur.valeur + couleur.couleurUnique + '</div><div id="couleurCarteJouer"> ' + couleur.couleur + '</div>' + '<div id="valCarteJouerRotate">' + couleur.valeur + couleur.couleurUnique + '</div></div>');
         
                     // si la valeur est egale a une figure alors on change la valeur
                     valeur = figure(valeur);
@@ -434,9 +490,12 @@
                     <input type="text" name="username" id="username" placeholder="login..">
                 </label>
             </div>
+            &#x2663;
+            &#x2665;
+            &#x2666;
+            &#x2660;
             <input type="submit">
         </form>
-
         <!-- parti connexion -->
         <div id="joueur">
             <span id="nomDuJoueur"></span>

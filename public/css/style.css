@@ -75,6 +75,7 @@ body{
 #carteJouer{
     width: 85px;
     height: 100px;
+    position: relative;
     float: left;
     border: 1px solid black;
     margin: 5px;
@@ -82,6 +83,26 @@ body{
     color: black;
     background-color: white;
     box-shadow: 1px 1px 7px black;
+    text-transform: capitalize;
+}
+
+#couleurCarteJouer{
+    font-size: 25px;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+#valCarteJouer{
+    /* font-size: 18px; */
+}
+
+#valCarteJouerRotate{
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Safari */
+    transform: rotate(180deg); /* Standard syntax */
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
 }
 
 #scoreCarteBanque, #scoreCarte{
