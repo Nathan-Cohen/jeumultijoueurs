@@ -75,13 +75,48 @@
             var buttonArreter = document.getElementById('arreter');
             var divResultat = document.getElementById('resultat');
             var divMise = document.getElementById('miseDuJoueur');
+            // deck de carte 
+            var carteTirer = 3;
+            var couleurs = ["carreau", "trefle", "coeur", "pique"];
+            var valeurs = ["as", "2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi"];
+            var tabCarte = [];
+            var tabIndexMelanger = [];
+            var tabCarteMelanger = [];
+            var indexage = 0;
+            var miseDepart = 1000;
+            var miseEnCour = 0;
+            var activePari = true;        
+            // met la mise de depart dans la div
+            var divMise = document.getElementById('miseDuJoueur');
+            divMise.innerHTML = miseDepart;
 
             // function qui affiche le resultat
             var winloose = function(arg, div){
-                $(divResultat).fadeIn('slow');                                                                       
+                $(divResultat).fadeIn('slow');  
+                setTimeout(function(){
+                    divBanque.innerHTML = "";
+                    scoreBanque.innerHTML = "";
+                    divJoueur.innerHTML = "";
+                    scoreJoueur.innerHTML = "";
+                    divMiseJeton.innerHTML = "";
+                    // affiche le boutton demarrer
+                    buttonDemarrer.style.display = 'inline-block'; 
+                    // cache les boutons du jeu
+                    buttonCarte.style.display = 'none';
+                    buttonArreter.style.display = 'none';
+                    $(divResultat).fadeOut('slow');                                                 
+                    surbrillance();
+
+                    activePari = true;
+
+                    }, 3000)                                                                    
                 if(arg == 'win'){
                     div.innerHTML = 'WIN';  
-                }else{
+                }
+                else if(arg == 'egalite'){
+                    div.innerHTML = 'Egalite';  
+                }
+                else{
                     div.innerHTML = 'LOOSE';  
                     if (divMise.innerHTML == 0){
                         alert('plus d\'argent !')
@@ -95,399 +130,293 @@
                 divMise.innerHTML = parseInt(miseTotal) + (parseInt(miseEnCour)*2);
             }
 
-        // deck de carte 
-        var carteTirer = 3;
-        var couleurs = ["carreau", "trefle", "coeur", "pique"];
-        var valeurs = ["as", "2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi"];
-        var tabCarte = [];
-        var tabIndexMelanger = [];
-        var tabCarteMelanger = [];
-        var indexage = 0;
-        var miseDepart = 1000;
-        var miseEnCour = 0;
-        var activePari = true;        
-        
-            
-        // met la mise de depart dans la div
-        var divMise = document.getElementById('miseDuJoueur');
-        divMise.innerHTML = miseDepart;
-
-        // construit les objets
-        var Carte = function(couleur, valeur, index){
-            this.couleur = couleur;
-            this.valeur = valeur;
-            this.index = index;
-            
-        }
-
-        // function converti les valeurs des figures
-        var figure = function(valeur){
-            if(valeur === 'dame' || valeur === 'valet' || valeur === 'roi'){
-                return valeur = 10;
-            }else if(valeur === 'as'){
-                return valeur = 11;
-            }else{
-                return valeur;
+            // construit les objets
+            var Carte = function(couleur, valeur, index){
+                this.couleur = couleur;
+                this.valeur = valeur;
+                this.index = index;
+                
             }
-        }
 
-        // tri le paquet de carte 
-        for (var j=0; valeurs[j]; j++) {
-            for (var i=0; couleurs[i]; i++) {
-                    var carte = new Carte(couleurs[i], valeurs[j], indexage);
-                    tabCarte.push(carte);
-                    indexage++;
-                    
+            // function converti les valeurs des figures
+            var figure = function(valeur){
+                if(valeur === 'dame' || valeur === 'valet' || valeur === 'roi'){
+                    return valeur = 10;
+                }else if(valeur === 'as'){
+                    return valeur = 11;
+                }else{
+                    return valeur;
                 }
             }
-        // console.log('Deck trier : ',tabCarte);
 
-        // melange le paquet de carte
-        var i = 0;
-            while (i<tabCarte.length){
-                    var verif = false;
-                    var carteAPrendre = Math.floor(Math.random() * Math.floor(tabCarte.length));
-                    tabIndexMelanger.forEach(function(element){
-                        if(carteAPrendre === element){
-                            verif = true;
-                        }
-                    });
-                    if(!verif){
-                        tabIndexMelanger.push(carteAPrendre);
-                        i++;
+            // tri le paquet de carte 
+            for (var j=0; valeurs[j]; j++) {
+                for (var i=0; couleurs[i]; i++) {
+                        var carte = new Carte(couleurs[i], valeurs[j], indexage);
+                        tabCarte.push(carte);
+                        indexage++;
+                        
                     }
+            }
+            // console.log('Deck trier : ',tabCarte);
+
+            // melange le paquet de carte
+            var i = 0;
+                while (i<tabCarte.length){
+                        var verif = false;
+                        var carteAPrendre = Math.floor(Math.random() * Math.floor(tabCarte.length));
+                        tabIndexMelanger.forEach(function(element){
+                            if(carteAPrendre === element){
+                                verif = true;
+                            }
+                        });
+                        if(!verif){
+                            tabIndexMelanger.push(carteAPrendre);
+                            i++;
+                        }
                 }
             // console.log('index melanger', tabIndexMelanger.length);
             
-        // melange le deck
-        tabIndexMelanger.forEach(function(element){
-            tabCarteMelanger.push(tabCarte[element]);
-        });
-        // console.log('Deck melanger : ', tabCarteMelanger);
-          
-        var relanceJeu = function(){
-            // affiche le boutton demarrer
-            buttonDemarrer.style.display = 'inline-block';
-            // cache les boutons du jeu
-            buttonCarte.style.display = 'none';
-            buttonArreter.style.display = 'none';
-
-            // clicker sur demarrer avant chaque parti            
-            buttonDemarrer.addEventListener('click', function(){   
+            // melange le deck
+            tabIndexMelanger.forEach(function(element){
+                tabCarteMelanger.push(tabCarte[element]);
+            });
+            // console.log('Deck melanger : ', tabCarteMelanger);
             
-            activePari = false;
-            //boucle sur toute les div jetons pour desactiver la surbrillance
-            for(var i=0; jetons[i]; i++){
-                jetons[i].style.boxShadow = "none"
-            }
-            // cache le boutton demarrer
-            // buttonDemarrer.style.display = 'none';
+            var relanceJeu = function(){
+                // cache les boutons du jeu
+                buttonCarte.style.display = 'none';
+                buttonArreter.style.display = 'none';
 
-            // affiche les boutons du jeu
-            buttonCarte.style.display = 'inline-block';
-            buttonArreter.style.display = 'inline-block';
-            
-            // affiche la div depart    
-            divDepart.style.display = "block"; 
-            setTimeout(function(){
-                        $(divDepart).fadeOut('slow');               
-            }, 2000)
-
-            // efface le resultat win/loose
-            // divResultat.innerHTML = '';              
-            // remet la mise en cour a 0
-            miseEnCour = 0;
-            // recupere la valeur et la couleur de la premiere carte
-            var valeur1 = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
-            var couleur1 = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
-            // recupere la valeur et la couleur de la deuxieme carte
-            var valeur2 = tabCarteMelanger[tabCarteMelanger.length - 2].valeur;
-            var couleur2 = tabCarteMelanger[tabCarteMelanger.length - 2].couleur;
-            // recupere la valeur et la couleur de la troisieme carte
-            var valeur3 = tabCarteMelanger[tabCarteMelanger.length - 3].valeur;
-            var couleur3 = tabCarteMelanger[tabCarteMelanger.length - 3].couleur;
-
-            // vide la div de la banque et du joueur des cartes
-            divJoueur.innerHTML = "";
-            divBanque.innerHTML = "";
-
-            // affiche les cartes du joueur
-            $(divJoueur).append('<div id="carteJouer">' + valeur1 + '<br> ' + couleur1 + '</div>');
-            $(divJoueur).append('<div id="carteJouer">' + valeur2 + '<br> ' + couleur2 + '</div>');
-            // affiche la carte de la banque
-            $(divBanque).append('<div id="carteJouer">' + valeur3 + '<br> ' + couleur3 + '</div>');
-
-            // si la valeur est egale a une figure alors on change la valeur 
-            valeur1 = figure(valeur1);
-            valeur2 = figure(valeur2);
-            valeur3 = figure(valeur3);
-
-            // affiche le score de la premiere carte de la banque
-            scoreBanque.innerHTML = valeur3;
-
-            // calcule le total du joueur
-            var total = parseInt(valeur1) + parseInt(valeur2);
-
-            if(total === 21){
-                winloose('win', divResultat)   
-                miseTotalDeLaPartiEnCour = pariGagnant();
-                distribJeton(miseTotalDeLaPartiEnCour)     
-                setTimeout(function(){  
-                $(divResultat).fadeOut('slow');                                                 
-                relanceJeu();
-                }, 3000)                
+                // clicker sur demarrer avant chaque parti            
+                buttonDemarrer.addEventListener('click', function(){   
                 
-            }else if(total > 21){
-                winloose('loose', divResultat)   
-                miseTotalDeLaPartiEnCour = pariGagnant();
-                distribJeton(miseTotalDeLaPartiEnCour)     
-                setTimeout(function(){                
-                $(divResultat).fadeOut('slow');                                                 
-                relanceJeu();
-                }, 3000) 
-            }
-            else{
-                // affiche le score des deux premieres cartes du joueur               
-                scoreJoueur.innerHTML = total;
-            }
-            
-            // supprime les trois cartes piocher
-            tabCarteMelanger.pop();
-            tabCarteMelanger.pop();
-            tabCarteMelanger.pop();
-            })
-            
-            
-        }
-        // fin de la function relance
-        
-        // demarre la function jeu
-        relanceJeu();
+                activePari = false;
+                //boucle sur toute les div jetons pour desactiver la surbrillance
+                for(var i=0; jetons[i]; i++){
+                    jetons[i].style.boxShadow = "none"
+                }
+                // cache le boutton demarrer
+                buttonDemarrer.style.display = 'none';
 
-        ///////////////DONNE UNE CARTE////////////
-        document.getElementById('donneCarte').addEventListener('click', function(){
-            //desactive les paris
-            activePari = false;
-            // compte le nombre de carte tirer
-            carteTirer++;
-            // recupere la valeur et la couleur de la carte dans le tableau
-            valeur = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
-            couleur = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
-            // affiche la carte piocher
-            $(divJoueur).append('<div id="carteJouer">' + valeur + '<br> ' + couleur + '</div>');
-            // si la valeur est egale a une figure alors on change la valeur
-            valeur = figure(valeur);
-            // recupere le score dans la div joueur
-            totalJoueur = scoreJoueur.innerHTML;
-            // calcule le score 
-            var totalJoueur = parseInt(valeur) + parseInt(totalJoueur);
-            // met le score dans la div scoreJoueur
-            scoreJoueur.innerHTML = totalJoueur;
-            
-            // supprimer du tableau la carte tirer
-            tabCarteMelanger.pop();                  
-             
-            if(totalJoueur === 21){
-                winloose('win', divResultat)   
-                miseTotalDeLaPartiEnCour = pariGagnant();
-                distribJeton(miseTotalDeLaPartiEnCour)                
+                // affiche les boutons du jeu
+                buttonCarte.style.display = 'inline-block';
+                buttonArreter.style.display = 'inline-block';
+                
+                // affiche la div depart    
+                divDepart.style.display = "block"; 
                 setTimeout(function(){
-                divBanque.innerHTML = "";
-                divJoueur.innerHTML = "";
-                scoreJoueur.innerHTML = "";
-                // enleve les jetons miser
-                divMiseJeton.innerHTML = "";
-                $(divResultat).fadeOut('slow');                                                 
-                surbrillance();
-                
-                activePari = true;
+                            $(divDepart).fadeOut('slow');               
+                }, 2000)
 
-                console.log('joueur egal 21 tirage');
-                }, 3000)
-                
-                
-            }else if(totalJoueur > 21){
-                winloose('loose', divResultat)                
-                setTimeout(function(){
-                divBanque.innerHTML = "";
+                // efface le resultat win/loose
+                // divResultat.innerHTML = '';              
+                // remet la mise en cour a 0
+                miseEnCour = 0;
+                // recupere la valeur et la couleur de la premiere carte
+                var valeur1 = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
+                var couleur1 = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
+                // recupere la valeur et la couleur de la deuxieme carte
+                var valeur2 = tabCarteMelanger[tabCarteMelanger.length - 2].valeur;
+                var couleur2 = tabCarteMelanger[tabCarteMelanger.length - 2].couleur;
+                // recupere la valeur et la couleur de la troisieme carte
+                var valeur3 = tabCarteMelanger[tabCarteMelanger.length - 3].valeur;
+                var couleur3 = tabCarteMelanger[tabCarteMelanger.length - 3].couleur;
+
+                // vide la div de la banque et du joueur des cartes
                 divJoueur.innerHTML = "";
-                scoreJoueur.innerHTML = "";
-                divMiseJeton.innerHTML = "";
-                $(divResultat).fadeOut('slow');                                                 
-                surbrillance();
+                divBanque.innerHTML = "";
+
+                // affiche les cartes du joueur
+                $(divJoueur).append('<div id="carteJouer">' + valeur1 + '<br> ' + couleur1 + '</div>');
+                $(divJoueur).append('<div id="carteJouer">' + valeur2 + '<br> ' + couleur2 + '</div>');
+                // affiche la carte de la banque
+                $(divBanque).append('<div id="carteJouer">' + valeur3 + '<br> ' + couleur3 + '</div>');
+
+                // si la valeur est egale a une figure alors on change la valeur 
+                valeur1 = figure(valeur1);
+                valeur2 = figure(valeur2);
+                valeur3 = figure(valeur3);
+
+                // affiche le score de la premiere carte de la banque
+                scoreBanque.innerHTML = valeur3;
+
+                // calcule le total du joueur
+                var total = parseInt(valeur1) + parseInt(valeur2);
+
+                if(total === 21){
+                    winloose('win', divResultat)   
+                    miseTotalDeLaPartiEnCour = pariGagnant();
+                    distribJeton(miseTotalDeLaPartiEnCour)     
+                    setTimeout(function(){  
+                    $(divResultat).fadeOut('slow');                                                 
+                    relanceJeu();
+                    }, 3000)                
+                    
+                }else if(total > 21){
+                    winloose('loose', divResultat)   
+                    miseTotalDeLaPartiEnCour = pariGagnant();
+                    distribJeton(miseTotalDeLaPartiEnCour)     
+                    setTimeout(function(){                
+                    $(divResultat).fadeOut('slow');                                                 
+                    relanceJeu();
+                    }, 3000) 
+                }
+                else{
+                    // affiche le score des deux premieres cartes du joueur               
+                    scoreJoueur.innerHTML = total;
+                }
                 
-                activePari = true;                
+                // supprime les trois cartes piocher
+                tabCarteMelanger.pop();
+                tabCarteMelanger.pop();
+                tabCarteMelanger.pop();
+                })
                 
-                console.log('joueur depasse 21 tirage');
-                }, 3000)
                 
-            }else{
-                scoreJoueur.innerHTML = totalJoueur;
             }
-            // console.log('deck carte en moin', tabCarteMelanger);
+            // fin de la function relance
             
-        });
-        
+            // demarre la function jeu
+            relanceJeu();
 
-        ///////////////ARRETER////////////
-        document.getElementById('arreter').addEventListener('click', function(){
-            // miseTotalDeLaPartiEnCour = pariGagnant();
-            // recupere le score dans la div Banque
-            scoreCarteBanque = scoreBanque.innerHTML;
-            // recupere le score dans la div Joueur
-            var scoreJoueurInt = scoreJoueur.innerHTML;
-
-            // tant que le score de la banque est inferieur a 17 il relance
-            while(scoreCarteBanque < 17){
+            ///////////////DONNE UNE CARTE////////////
+            document.getElementById('donneCarte').addEventListener('click', function(){
+                //desactive les paris
+                activePari = false;
                 // compte le nombre de carte tirer
                 carteTirer++;
-    
+                // recupere la valeur et la couleur de la carte dans le tableau
                 valeur = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
                 couleur = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
-    
                 // affiche la carte piocher
-                $(divBanque).append('<div id="carteJouer">' + valeur + '<br> ' + couleur + '</div>');
-    
+                $(divJoueur).append('<div id="carteJouer">' + valeur + '<br> ' + couleur + '</div>');
                 // si la valeur est egale a une figure alors on change la valeur
                 valeur = figure(valeur);
-                
+                // recupere le score dans la div joueur
+                totalJoueur = scoreJoueur.innerHTML;
                 // calcule le score 
-                var scoreCarteBanque = parseInt(valeur) + parseInt(scoreCarteBanque);
-                // remplace le score de la banque
-                scoreBanque.innerHTML = scoreCarteBanque;
+                var totalJoueur = parseInt(valeur) + parseInt(totalJoueur);
+                // met le score dans la div scoreJoueur
+                scoreJoueur.innerHTML = totalJoueur;
                 
-                // recupere la valeur de la div joueur
-
-                if(scoreCarteBanque === 21){
-                    console.log('banque 21');
-                    winloose('loose', divResultat)    
-                    setTimeout(function(){
-                    divBanque.innerHTML = "";
-                    scoreBanque.innerHTML = "";
-                    divJoueur.innerHTML = "";
-                    scoreJoueur.innerHTML = "";
-                    divMiseJeton.innerHTML = "";
-                    $(divResultat).fadeOut('slow');                                                 
-                    surbrillance();
-
-                    activePari = true;
-
-                    }, 3000)
-                    
-                }else if(scoreCarteBanque > 21){
-                    console.log('banque depasse 21');   
-                    winloose('win', divResultat)      
+                // supprimer du tableau la carte tirer
+                tabCarteMelanger.pop();                  
+                
+                if(totalJoueur === 21){
+                    winloose('win', divResultat)   
+                    console.log('joueur egal 21 tirage');                
                     miseTotalDeLaPartiEnCour = pariGagnant();
-                    distribJeton(miseTotalDeLaPartiEnCour)                
-                    setTimeout(function(){
-                    divBanque.innerHTML = "";
-                    scoreBanque.innerHTML = "";
-                    divJoueur.innerHTML = "";
-                    scoreJoueur.innerHTML = "";
-                    divMiseJeton.innerHTML = "";
-                    $(divResultat).fadeOut('slow');                                                 
-                    surbrillance();
+                    distribJeton(miseTotalDeLaPartiEnCour)  
                     
-                    activePari = true;
+                }else if(totalJoueur > 21){
+                    winloose('loose', divResultat)     
+                    console.log('joueur depasse 21 tirage'); 
                     
-                    }, 3000)
-                    
-                }else if(scoreCarteBanque > scoreJoueurInt && scoreCarteBanque >= 17 && scoreCarteBanque < 21){
-                    console.log('banque depasse joueur');  
-                    winloose('loose', divResultat)                                                            
-                    setTimeout(function(){
-                    divBanque.innerHTML = "";
-                    scoreBanque.innerHTML = "";
-                    divJoueur.innerHTML = "";
-                    scoreJoueur.innerHTML = "";
-                    divMiseJeton.innerHTML = "";
-                    $(divResultat).fadeOut('slow');                                                 
-                    surbrillance();
-
-                    activePari = true;
-                          
-                    }, 3000)
-                }else if(scoreCarteBanque < scoreJoueurInt && scoreCarteBanque >= 17){
-                    console.log('joueur depasse banque');    
-                    winloose('win', divResultat)         
-                    miseTotalDeLaPartiEnCour = pariGagnant();
-                    distribJeton(miseTotalDeLaPartiEnCour)                                                                                                 
-                    setTimeout(function(){
-                    divBanque.innerHTML = "";
-                    scoreBanque.innerHTML = "";
-                    divJoueur.innerHTML = "";
-                    scoreJoueur.innerHTML = "";
-                    divMiseJeton.innerHTML = "";
-                    $(divResultat).fadeOut('slow');                                                 
-                    surbrillance();
-
-                    activePari = true;
-                    
-                    }, 3000)
-                }else if(scoreCarteBanque == scoreJoueurInt){
-                    console.log('joueur egal banque');   
-                    divResultat.innerHTML = 'Egalite';
-                    miseTotalDeLaPartiEnCour = pariGagnant();
-                    distribJeton(miseTotalDeLaPartiEnCour)                
-                    setTimeout(function(){
-                    divBanque.innerHTML = "";
-                    scoreBanque.innerHTML = "";
-                    divJoueur.innerHTML = "";
-                    scoreJoueur.innerHTML = "";
-                    divMiseJeton.innerHTML = "";
-                    $(divResultat).fadeOut('slow');                                                 
-                    surbrillance();
-                    activePari = true;
-                    
-                    }, 3000)
                 }else{
-                    console.log('banque relance');                                                            
+                    scoreJoueur.innerHTML = totalJoueur;
+                }
+                // console.log('deck carte en moin', tabCarteMelanger);
+            });
+            
+
+            ///////////////ARRETER////////////
+            document.getElementById('arreter').addEventListener('click', function(){
+                // miseTotalDeLaPartiEnCour = pariGagnant();
+                // recupere le score dans la div Banque
+                scoreCarteBanque = scoreBanque.innerHTML;
+                // recupere le score dans la div Joueur
+                var scoreJoueurInt = scoreJoueur.innerHTML;
+
+                // tant que le score de la banque est inferieur a 17 il relance
+                while(scoreCarteBanque < 17){
+                    // compte le nombre de carte tirer
+                    carteTirer++;
+        
+                    valeur = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
+                    couleur = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
+        
+                    // affiche la carte piocher
+                    $(divBanque).append('<div id="carteJouer">' + valeur + '<br> ' + couleur + '</div>');
+        
+                    // si la valeur est egale a une figure alors on change la valeur
+                    valeur = figure(valeur);
+                    
+                    // calcule le score 
+                    var scoreCarteBanque = parseInt(valeur) + parseInt(scoreCarteBanque);
+                    // remplace le score de la banque
                     scoreBanque.innerHTML = scoreCarteBanque;
+                    
+                    if(scoreCarteBanque === 21){
+                        console.log('banque 21');
+                        winloose('loose', divResultat)    
+                        
+                    }else if(scoreCarteBanque > 21){
+                        console.log('banque depasse 21');   
+                        winloose('win', divResultat)      
+                        miseTotalDeLaPartiEnCour = pariGagnant();
+                        distribJeton(miseTotalDeLaPartiEnCour)                
+                        
+                    }else if(scoreCarteBanque > scoreJoueurInt && scoreCarteBanque >= 17 && scoreCarteBanque < 21){
+                        console.log('banque depasse joueur');  
+                        winloose('loose', divResultat)                                                            
+                        
+                    }else if(scoreCarteBanque < scoreJoueurInt && scoreCarteBanque >= 17){
+                        console.log('joueur depasse banque');    
+                        winloose('win', divResultat)         
+                        miseTotalDeLaPartiEnCour = pariGagnant();
+                        distribJeton(miseTotalDeLaPartiEnCour)                                                                                          
+                    }else if(scoreCarteBanque == scoreJoueurInt){
+                        console.log('joueur egal banque');   
+                        winloose('egalite', divResultat)
+                        miseTotalDeLaPartiEnCour = pariGagnant();
+                        distribJeton(miseTotalDeLaPartiEnCour)                
+                        
+                    }else{
+                        console.log('banque relance');                                                            
+                        scoreBanque.innerHTML = scoreCarteBanque;
+                    }
+                }
+
+            });
+
+            // function qui met en surbrillance les jetons
+            function surbrillance(){
+                var jetonsSurbrillance = document.getElementsByClassName('jeton')
+                for(var i=0; jetonsSurbrillance[i]; i++){
+                    jetonsSurbrillance[i].style.boxShadow = "0px 0px 14px yellow";
                 }
             }
 
-        });
-
-        // function qui met en surbrillance les jetons
-        function surbrillance(){
-            var jetonsSurbrillance = document.getElementsByClassName('jeton')
-            for(var i=0; jetonsSurbrillance[i]; i++){
-                jetonsSurbrillance[i].style.boxShadow = "0px 0px 14px yellow";
+            ///////////////MISE/////////////
+            function pariGagnant(){  
+                var k=0; 
+                var totalDeLaMise = 0;
+                while(document.getElementById('mise').getElementsByClassName('jeton')[k]){
+                    totalDeLaMise += parseInt(document.getElementById('mise').getElementsByClassName('jeton')[k].innerHTML)
+                    k++;
+                }
+                return totalDeLaMise;
             }
-        }
 
-
-        ///////////////MISE/////////////
-        function pariGagnant(){  
-            var k=0; 
-            var totalDeLaMise = 0;
-            while(document.getElementById('mise').getElementsByClassName('jeton')[k]){
-                totalDeLaMise += parseInt(document.getElementById('mise').getElementsByClassName('jeton')[k].innerHTML)
-                k++;
-            }
-            return totalDeLaMise;
-        }
-
-        // recupere la div pari qui contient les jetons pour miser
-        var divPari = document.getElementById('pari');
-        // ecoute les cliques dans la div pari 
-        divPari.addEventListener('click', function(evenement){
-                if(activePari && divMise.innerHTML > 0){
-                // recupere la valeur de la div jeton
-                valeurJeton = evenement.toElement.id.match(/\d+/g).join('');
-                // recupere la valeur de la mise de depart
-                miseDepart = document.getElementById('miseDuJoueur').innerHTML;
-                // la valeur du jetons clicker dans la mise en cours
-                miseEnCour = parseInt(valeurJeton);
-                mise = miseDepart - miseEnCour;
-                // insere la mise dans la div mise
-                divMise.innerHTML = mise;
-                
-                // affiche le jeton sur la table
-                divMiseJeton.innerHTML += "<div id=" + evenement.toElement.id + " class= 'jeton'>" + valeurJeton + "</div>";
-            }
-        });
-            
+            // recupere la div pari qui contient les jetons pour miser
+            var divPari = document.getElementById('pari');
+            // ecoute les cliques dans la div pari 
+            divPari.addEventListener('click', function(evenement){
+                    if(activePari && divMise.innerHTML > 0){
+                    // recupere la valeur de la div jeton
+                    valeurJeton = evenement.toElement.id.match(/\d+/g).join('');
+                    // recupere la valeur de la mise de depart
+                    miseDepart = document.getElementById('miseDuJoueur').innerHTML;
+                    // la valeur du jetons clicker dans la mise en cours
+                    miseEnCour = parseInt(valeurJeton);
+                    mise = miseDepart - miseEnCour;
+                    // insere la mise dans la div mise
+                    divMise.innerHTML = mise;
+                    // affiche le jeton sur la table
+                    divMiseJeton.innerHTML += "<div id=" + evenement.toElement.id + " class= 'jeton'>" + valeurJeton + "</div>";
+                }
+            });
             
         });
 

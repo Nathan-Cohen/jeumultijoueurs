@@ -101,22 +101,27 @@ body{
 /* COMMANDES */
 
 #commandes{
-    margin-top: 20px;
+    width: 300px;
     display: none;
+    margin: auto;
 }
 
 #demarrer{
     border: none;
-    padding: 10px;
+    padding: 20px;
     background-color: #0dbf13d1;
     font-weight: bold;
     color: white;
     cursor: pointer;
 }
 
+#demarrer:hover{
+    background-color: #038a08d1;
+}
+
 #donneCarte{
     border: none;
-    padding: 10px;
+    padding: 20px;
     background-color: #0a9e0ffa;
     font-weight: bold;
     color: white;
@@ -125,14 +130,22 @@ body{
       
 }
 
+#donneCarte:hover{
+    background-color: #056c09fa;
+}
+
 #arreter{
     border: none;
-    padding: 10px;
+    padding: 20px;
     background-color: #ff0f0ffa;
     font-weight: bold;
     color: white;
     cursor: pointer;    
     display: none;
+}
+
+#arreter:hover{
+    background-color: #c60202fa;
 }
 
 
@@ -161,6 +174,10 @@ body{
     box-shadow: 0px 0px 14px yellow;
     font-weight: bold;
 
+}
+
+#jeton1:hover, #jeton5:hover, #jeton20:hover, #jeton50:hover, #jeton100:hover, #jeton500:hover{
+    opacity: 0.7;
 }
 
 #jeton1{
