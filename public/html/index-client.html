@@ -12,7 +12,7 @@
     <script>
     (function(window, io){
         window.addEventListener('DOMContentLoaded', function(){
-            var socket = io('http://192.168.0.103:8000/');
+            var socket = io('http://192.168.0.100:8000/');
             document.getElementById('monForm').addEventListener('submit', function(event){
                 event.preventDefault();
                 var username = document.getElementById('username').value;
@@ -160,11 +160,7 @@
                this.couleur = couleur;
                this.valeur = valeur;
                this.couleurUnique = "";
-                // console.log(parseInt(this.valeur))
-                // if(parseInt(this.valeur) === NaN){
-                //     this.valeur.substring(0,2)
-                //     console.log(this.valeur)
-                // }
+
                 switch(this.valeur){
                     case 'dame':
                         this.valeur = 'D'
@@ -198,41 +194,46 @@
                     this.couleur = '&#x2665;'.repeat(valeur)                   
                }
             }
-
-            // tri le paquet de carte 
-            for (var j=0; valeurs[j]; j++) {
-                for (var i=0; couleurs[i]; i++) {
-                        var carte = new Carte(couleurs[i], valeurs[j], indexage);
-                        tabCarte.push(carte);
-                        indexage++;
-                        
-                    }
-            }
-            // console.log('Deck trier : ',tabCarte);
-
-            // melange le paquet de carte
-            var i = 0;
-                while (i<tabCarte.length){
-                        var verif = false;
-                        var carteAPrendre = Math.floor(Math.random() * Math.floor(tabCarte.length));
-                        tabIndexMelanger.forEach(function(element){
-                            if(carteAPrendre === element){
-                                verif = true;
-                            }
-                        });
-                        if(!verif){
-                            tabIndexMelanger.push(carteAPrendre);
-                            i++;
+            
+            var creationDeck = function(){
+                // tri le paquet de carte 
+                for (var j=0; valeurs[j]; j++) {
+                    for (var i=0; couleurs[i]; i++) {
+                            var carte = new Carte(couleurs[i], valeurs[j], indexage);
+                            tabCarte.push(carte);
+                            indexage++;
+                            
                         }
                 }
-            // console.log('index melanger', tabIndexMelanger.length);
+                // console.log('Deck trier : ',tabCarte);
+    
+                // melange le paquet de carte
+                var i = 0;
+                    while (i<tabCarte.length){
+                            var verif = false;
+                            var carteAPrendre = Math.floor(Math.random() * Math.floor(tabCarte.length));
+                            tabIndexMelanger.forEach(function(element){
+                                if(carteAPrendre === element){
+                                    verif = true;
+                                }
+                            });
+                            if(!verif){
+                                tabIndexMelanger.push(carteAPrendre);
+                                i++;
+                            }
+                    }
+                // console.log('index melanger', tabIndexMelanger.length);
+                
+                // melange le deck
+                tabIndexMelanger.forEach(function(element){
+                    tabCarteMelanger.push(tabCarte[element]);
+                });
+                // console.log('Deck melanger : ', tabCarteMelanger);
+
+            }
             
-            // melange le deck
-            tabIndexMelanger.forEach(function(element){
-                tabCarteMelanger.push(tabCarte[element]);
-            });
-            // console.log('Deck melanger : ', tabCarteMelanger);
-            
+            creationDeck()
+
             var relanceJeu = function(){
                 // cache les boutons du jeu
                 buttonCarte.style.display = 'none';
@@ -432,6 +433,8 @@
                         console.log('banque relance');                                                            
                         scoreBanque.innerHTML = scoreCarteBanque;
                     }
+                tabCarteMelanger.pop();
+                    
                 }
 
             });
