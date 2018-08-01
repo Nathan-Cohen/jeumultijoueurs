@@ -12,7 +12,7 @@
     <script>
     (function(window, io){
         window.addEventListener('DOMContentLoaded', function(){
-            var socket = io('http://192.168.0.100:8000/');
+            var socket = io('http://192.168.0.104:8000/');
             document.getElementById('monForm').addEventListener('submit', function(event){
                 event.preventDefault();
                 var username = document.getElementById('username').value;
@@ -75,20 +75,9 @@
             var buttonArreter = document.getElementById('arreter');
             var divResultat = document.getElementById('resultat');
             var divMise = document.getElementById('miseDuJoueur');
-            // deck de carte 
-            var carteTirer = 3;
-            var couleurs = ["carreau", "trefle", "coeur", "pique"];
-            var valeurs = ["as", "2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi"];
-            var tabCarte = [];
-            var tabIndexMelanger = [];
-            var tabCarteMelanger = [];
-            var indexage = 0;
-            var miseDepart = 1000;
-            var miseEnCour = 0;
-            var activePari = true;        
+           
             // met la mise de depart dans la div
             var divMise = document.getElementById('miseDuJoueur');
-            divMise.innerHTML = miseDepart;
 
             // function qui affiche le resultat
             var winloose = function(arg, div){
@@ -107,7 +96,7 @@
                     $(divResultat).fadeOut('slow');                                                 
                     surbrillance();
 
-                    activePari = true;
+                    creationDeck.activePari = true;
 
                     }, 3000)                                                                    
                 if(arg == 'win'){
@@ -196,43 +185,56 @@
             }
             
             var creationDeck = function(){
+                 // deck de carte 
+                this.carteTirer = 3;
+                this.couleurs = ["carreau", "trefle", "coeur", "pique"];
+                this.valeurs = ["as", "2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "dame", "roi"];
+                this.tabCarte = [];
+                this.tabIndexMelanger = [];
+                this.tabCarteMelanger = [];
+                this.indexage = 0;
+                this.miseDepart = 1000;
+                this.miseEnCour = 0;
+                this.activePari = true;        
+                divMise.innerHTML = this.miseDepart;
+                
                 // tri le paquet de carte 
-                for (var j=0; valeurs[j]; j++) {
-                    for (var i=0; couleurs[i]; i++) {
-                            var carte = new Carte(couleurs[i], valeurs[j], indexage);
-                            tabCarte.push(carte);
-                            indexage++;
+                for (var j=0; this.valeurs[j]; j++) {
+                    for (var i=0; this.couleurs[i]; i++) {
+                            var carte = new Carte(this.couleurs[i], this.valeurs[j], this.indexage);
+                            this.tabCarte.push(carte);
+                            this.indexage++;
                             
                         }
                 }
-                // console.log('Deck trier : ',tabCarte);
+                console.log('Deck trier : ',this.tabCarte);
     
                 // melange le paquet de carte
                 var i = 0;
-                    while (i<tabCarte.length){
+                    while (i<this.tabCarte.length){
                             var verif = false;
-                            var carteAPrendre = Math.floor(Math.random() * Math.floor(tabCarte.length));
-                            tabIndexMelanger.forEach(function(element){
+                            var carteAPrendre = Math.floor(Math.random() * Math.floor(this.tabCarte.length));
+                            this.tabIndexMelanger.forEach(function(element){
                                 if(carteAPrendre === element){
                                     verif = true;
                                 }
                             });
                             if(!verif){
-                                tabIndexMelanger.push(carteAPrendre);
+                                this.tabIndexMelanger.push(carteAPrendre);
                                 i++;
                             }
                     }
-                // console.log('index melanger', tabIndexMelanger.length);
+                console.log('index melanger', this.tabIndexMelanger.length);
                 
                 // melange le deck
-                tabIndexMelanger.forEach(function(element){
-                    tabCarteMelanger.push(tabCarte[element]);
+                this.tabIndexMelanger.forEach(function(element){
+                    this.tabCarteMelanger.push(this.tabCarte[element]);
                 });
-                // console.log('Deck melanger : ', tabCarteMelanger);
+                console.log('Deck melanger : ', this.tabCarteMelanger);
 
             }
             
-            creationDeck()
+            creationDeck();
 
             var relanceJeu = function(){
                 // cache les boutons du jeu
@@ -242,7 +244,7 @@
                 // clicker sur demarrer avant chaque parti            
                 buttonDemarrer.addEventListener('click', function(){   
                 
-                activePari = false;
+                creationDeck.activePari = false;
                 //boucle sur toute les div jetons pour desactiver la surbrillance
                 for(var i=0; jetons[i]; i++){
                     jetons[i].style.boxShadow = "none"
@@ -263,7 +265,7 @@
                 // efface le resultat win/loose
                 // divResultat.innerHTML = '';              
                 // remet la mise en cour a 0
-                miseEnCour = 0;
+                creationDeck.miseEnCour = 0;
                 // recupere la valeur et la couleur de la premiere carte
                 var valeur1 = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
                 var couleur1 = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
@@ -336,13 +338,21 @@
 
             ///////////////DONNE UNE CARTE////////////
             document.getElementById('donneCarte').addEventListener('click', function(){
+                // console.log('Deck melanger : ', tabCarteMelanger);                
                 //desactive les paris
-                activePari = false;
+                creationDeck.activePari = false;
                 // compte le nombre de carte tirer
                 carteTirer++;
+                console.log(tabCarteMelanger.length);
+                // verifie si le deck est vide
+                if(tabCarteMelanger.length < 4){
+                    creationDeck()
+                }
                 // recupere la valeur et la couleur de la carte dans le tableau
                 valeur = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
                 couleur = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
+                
+
                 // renvoie la couleur de la carte
                 couleur = new couleurCarte(couleur, valeur)
                 // affiche la carte piocher
@@ -391,6 +401,12 @@
         
                     valeur = tabCarteMelanger[tabCarteMelanger.length - 1].valeur;
                     couleur = tabCarteMelanger[tabCarteMelanger.length - 1].couleur;
+                    console.log(tabCarteMelanger.length);
+                    console.log(valeur);                    
+                    // verifie si le deck est vide
+                    if(tabCarteMelanger.length < 4){
+                        creationDeck()
+                    }
                     // renvoie la couleur de la carte                    
                     couleur = new couleurCarte(couleur, valeur)
                     // affiche la carte piocher
@@ -462,14 +478,14 @@
             var divPari = document.getElementById('pari');
             // ecoute les cliques dans la div pari 
             divPari.addEventListener('click', function(evenement){
-                    if(activePari && divMise.innerHTML > 0){
+                    if(creationDeck.activePari && divMise.innerHTML > 0){
                     // recupere la valeur de la div jeton
                     valeurJeton = evenement.toElement.id.match(/\d+/g).join('');
                     // recupere la valeur de la mise de depart
-                    miseDepart = document.getElementById('miseDuJoueur').innerHTML;
+                    creationDeck.miseDepart = document.getElementById('miseDuJoueur').innerHTML;
                     // la valeur du jetons clicker dans la mise en cours
-                    miseEnCour = parseInt(valeurJeton);
-                    mise = miseDepart - miseEnCour;
+                    creationDeck.miseEnCour = parseInt(valeurJeton);
+                    mise = creationDeck.miseDepart - creationDeck.miseEnCour;
                     // insere la mise dans la div mise
                     divMise.innerHTML = mise;
                     // affiche le jeton sur la table
