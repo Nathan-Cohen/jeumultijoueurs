@@ -26,7 +26,6 @@ var tabConnection = [];
 
 socketIOServer.on('connection', function(socket){
     tabConnection.push(socket);
-
     socket.on('name', function(data){
         var connexion = {connecter: false, username: ''}
         var url = "mongodb://localhost:27017/joueurs";
@@ -37,11 +36,11 @@ socketIOServer.on('connection', function(socket){
                      console.log(err.message);
                      } else { 
                             if(o === null){
-                                collection.insert({username: data.username, date: new Date()}, function(err, o) {
+                                collection.insert({username: data.username, idUnique: data.id, date: new Date()}, function(err, o) {
                                     if (err) {
                                         console.log(err.message);
                                         } else { 
-                                            console.log("Connecter : " + data.username);
+                                            console.log("Connecter : ", data.username, data.id);
                                             connexion.connecter = true;
                                             connexion.username = data.username;
                                             socket.emit('connection', connexion);
@@ -60,4 +59,4 @@ socketIOServer.on('connection', function(socket){
 
 
 
-server.listen(8000);
+server.listen(8080);
