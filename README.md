@@ -1,4 +1,6 @@
-## jeumultijoueurs blackjack
+# jeumultijoueurs blackjack
+
+## Règles du jeu
 
 #### But du jeu
 
@@ -29,3 +31,9 @@ Le croupier est le dernier joueur à agir. Le croupier ne se sert qu’une carte
 Si le croupier saute, c’est-à-dire dépasse 21, tous les joueurs qui sont encore en lice gagnent. Sinon, les joueurs qui ont un total supérieur à celui du croupier gagnent et les joueurs qui ont un total inférieur perdent. En cas d’égalité, la mise du joueur est remboursée (l’argent ne change pas de main).
 
 Une fois que toutes les mains ont été payées ou que les mises ont été encaissées, une nouvelle donne peut avoir lieu.
+
+## installation
+
+
+## technologie
+liste des technologies utiliser :
