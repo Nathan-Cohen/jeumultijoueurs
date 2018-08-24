@@ -9,7 +9,7 @@ Après avoir reçu deux cartes, le joueur tire des cartes pour s’approcher de 
 - Les valets, les dames et les rois (les figures), ont une valeur de 10 points 
 - L’As vaut 1 point ou 11 points, au choix du joueur
 
-### 1 : La distribution des cartes initiale
+##### 1 : La distribution des cartes initiale
 Le croupier distribue deux cartes visibles à chaque joueur et ne se distribue qu’une seule carte, découverte (règle européenne sans carte cachée). 
 
 #### Cas du blackjack
